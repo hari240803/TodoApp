@@ -1,14 +1,17 @@
 from typing import Annotated
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from starlette import status
 from models import Todos
 from database import SessionLocal
 from .auth import get_current_user
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
+templetes = Jinja2Templates(directory="templetes")
 
 def get_db():
     db = SessionLocal()
@@ -95,9 +98,9 @@ async def delete_todo(user: user_dependency, db: db_dependency, todo_id: int = P
 
 
 
-
-
-
+@router.get("/test")
+async def test(request: Request):
+    return templetes.TemplateResponse("home.html", {"request": request})
 
 
 
